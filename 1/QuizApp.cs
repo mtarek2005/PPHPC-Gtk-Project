@@ -83,6 +83,10 @@ class QuizApp
 
         successButton.Clicked += OnDoneClicked;
 
+        selectionWindow.Title+=" | User "+id;
+        mainWindow.Title+=" | User "+id;
+        successWindow.Title+=" | User "+id;
+        
         // Show selection screen
         selectionWindow.ShowAll();
         LoadQuizList();

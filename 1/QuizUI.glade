@@ -5,6 +5,8 @@
   <object class="GtkWindow" id="MainWindow">
     <property name="can-focus">False</property>
     <property name="title">Quiz Platform</property>
+    <property name="default-width">400</property>
+    <property name="default-height">400</property>
     <child>
       <object class="GtkBox" id="MainBox">
         <property name="can-focus">False</property>
@@ -75,6 +77,18 @@
           </packing>
         </child>
         <child>
+          <object class="GtkSeparator">
+            <property name="visible">True</property>
+            <property name="can-focus">False</property>
+            <property name="orientation">vertical</property>
+          </object>
+          <packing>
+            <property name="expand">True</property>
+            <property name="fill">True</property>
+            <property name="position">5</property>
+          </packing>
+        </child>
+        <child>
           <object class="GtkButton" id="SubmitButton">
             <property name="label">Submit Answer</property>
             <property name="can-focus">False</property>
@@ -83,7 +97,7 @@
           <packing>
             <property name="expand">False</property>
             <property name="fill">True</property>
-            <property name="position">5</property>
+            <property name="position">6</property>
           </packing>
         </child>
         <child>
@@ -93,7 +107,7 @@
           <packing>
             <property name="expand">False</property>
             <property name="fill">True</property>
-            <property name="position">6</property>
+            <property name="position">7</property>
           </packing>
         </child>
       </object>
@@ -102,6 +116,8 @@
   <object class="GtkWindow" id="SelectionWindow">
     <property name="can-focus">False</property>
     <property name="title">Select a Quiz</property>
+    <property name="default-width">400</property>
+    <property name="default-height">400</property>
     <child>
       <object class="GtkBox" id="SelectionBox">
         <property name="can-focus">False</property>
@@ -125,7 +141,7 @@
             </child>
           </object>
           <packing>
-            <property name="expand">False</property>
+            <property name="expand">True</property>
             <property name="fill">True</property>
             <property name="position">1</property>
           </packing>
@@ -147,6 +163,9 @@
   </object>
   <object class="GtkWindow" id="SuccessWindow">
     <property name="can-focus">False</property>
+    <property name="title" translatable="yes">Done!</property>
+    <property name="default-width">400</property>
+    <property name="default-height">400</property>
     <child>
       <object class="GtkBox">
         <property name="visible">True</property>
@@ -156,9 +175,6 @@
         <property name="margin-top">100</property>
         <property name="margin-bottom">100</property>
         <property name="orientation">vertical</property>
-        <child>
-          <placeholder/>
-        </child>
         <child>
           <object class="GtkLabel" id="SuccessLabel">
             <property name="visible">True</property>

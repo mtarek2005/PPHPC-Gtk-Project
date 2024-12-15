@@ -13,8 +13,6 @@ namespace _1
         [UI] private SpinButton _spin1 = null;
         [UI] private Adjustment _adjustment1 = null;
 
-        private int _counter;
-
         public MainWindow() : this(new Builder("MainWindow.glade")) { }
 
         private MainWindow(Builder builder) : base(builder.GetRawOwnedObject("MainWindow"))
@@ -34,9 +32,6 @@ namespace _1
         {
             int v=(int)_adjustment1.Value;
             Console.WriteLine(v);
-            _counter++;
-            _label1.Text = "Hello World! This button has been clicked " + _counter + " time(s).";
-            //object lock=new();
             Parallel.For(0,v,(int i)=>{
                 Application.Invoke((sender, e) =>
                 {

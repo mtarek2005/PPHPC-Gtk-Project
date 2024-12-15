@@ -5,6 +5,8 @@ using System.IO;
 using System.Net;
 using System.Text;
 using System.Threading;
+using System.Threading.Tasks;
+using Gtk;
 using Newtonsoft.Json;
 
 class SimpleHttpServer
@@ -12,9 +14,9 @@ class SimpleHttpServer
     private static HttpListener listener;
     private static string data_path="data.json";
     private static readonly object filelock =new();
-    private static List<Quiz> quizzes = new();
-    private static ConcurrentDictionary<int, List<QuestionRecord>> quizQuestions = new();
-    private static ConcurrentDictionary<int, ConcurrentDictionary<int,ConcurrentDictionary<int,AnswerSubmission>>> answerSubmissions = new();
+    public static List<Quiz> quizzes = new();
+    public static ConcurrentDictionary<int, List<QuestionRecord>> quizQuestions = new();
+    public static ConcurrentDictionary<int, ConcurrentDictionary<int,ConcurrentDictionary<int,AnswerSubmission>>> answerSubmissions = new();
 
     public static void Run()
     {
@@ -31,6 +33,10 @@ class SimpleHttpServer
         // Start the listener
         listener.Start();
         Console.WriteLine("Server is listening on http://localhost:8080/");
+        Task.Run(() =>Application.Invoke((sender,e)=>{
+            var win = new _1.AdminPanelWindow();
+            win.ShowAll();
+        }));
 
         // Handle requests asynchronously
         while (true)
@@ -85,7 +91,8 @@ class SimpleHttpServer
     {
         response.ContentType = "application/json";
 
-        string jsonResponse = JsonConvert.SerializeObject(quizzes);
+        string jsonResponse;
+        lock(quizzes) jsonResponse = JsonConvert.SerializeObject(quizzes);
         byte[] buffer = Encoding.UTF8.GetBytes(jsonResponse);
 
         response.ContentLength64 = buffer.Length;
@@ -152,10 +159,11 @@ class SimpleHttpServer
 
     private static void InitializeData()
     {
-        // Add sample quizzes
-        quizzes.Add(new Quiz { Id = 1, Name = "General Knowledge" });
-        quizzes.Add(new Quiz { Id = 2, Name = "Science Trivia" });
-
+        lock(quizzes) {
+            // Add sample quizzes
+            quizzes.Add(new Quiz { Id = 1, Name = "General Knowledge" });
+            quizzes.Add(new Quiz { Id = 2, Name = "Science Trivia" });
+        }
         // Add questions for each quiz
         quizQuestions[1] = new List<QuestionRecord>
         {
@@ -174,13 +182,13 @@ class SimpleHttpServer
         string content;
         lock(filelock) content=File.ReadAllText(data_path);
         var data = JsonConvert.DeserializeAnonymousType(content, new { quizzes, quizQuestions, answerSubmissions });
-        quizzes=data.quizzes;
+        lock(quizzes) quizzes=data.quizzes;
         quizQuestions=data.quizQuestions;
         answerSubmissions=data.answerSubmissions;
     }
-    private static void SaveData() {
+    public static void SaveData() {
         string data;
-        lock(answerSubmissions)data=JsonConvert.SerializeObject(new { quizzes, quizQuestions, answerSubmissions });
+        lock(answerSubmissions) data=JsonConvert.SerializeObject(new { quizzes, quizQuestions, answerSubmissions });
         lock(filelock) File.WriteAllText(data_path,data);
     }
 }
